@@ -146,8 +146,8 @@ function App() {
         throw new Error(json.error || "Login failed");
       }
     } catch (err) {
-      console.error("Login Error:", error);
-      throw error;
+      console.error("Login Error:", err);
+      throw err;
     }
   };
 
@@ -172,9 +172,9 @@ function App() {
       } else {
         throw new Error(json.error || "Registration failed");
       }
-    } catch (error) {
-      console.error("Registration Error:", error);
-      throw error;
+    } catch (err) {
+      console.error("Registration Error:", err);
+      throw err;
     }
   };
 
