@@ -29,7 +29,7 @@ const Login = ({ login }) => {
         onChange={(ev) => setPassword(ev.target.value)}
       />
       <button disabled={!username || !password}>Login</button>
-      {/* {error && <p style={{ color: "red" }}>Error Happening: {error}</p>} */}
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
   );
 };
@@ -83,7 +83,7 @@ function App() {
   const attemptLoginWithToken = async () => {
     const token = window.localStorage.getItem("token");
     if (token) {
-      console.log("TOKEN-1", token);
+      console.log("TOKEN", token);
       const response = await fetch(`/api/auth/me`, {
         headers: {
           authorization: token,
@@ -128,20 +128,26 @@ function App() {
   }, [auth]);
 
   const login = async (credentials) => {
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      body: JSON.stringify(credentials),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        body: JSON.stringify(credentials),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    const json = await response.json();
-    if (response.ok) {
-      window.localStorage.setItem("token", json.token);
-      attemptLoginWithToken();
-    } else {
-      console.log(json);
+      const json = await response.json();
+      if (response.ok) {
+        window.localStorage.setItem("token", json.token);
+        attemptLoginWithToken();
+      } else {
+        console.log(json);
+        throw new Error(json.error || "Login failed");
+      }
+    } catch (err) {
+      console.error("Login Error:", error);
+      throw error;
     }
   };
 
