@@ -81,7 +81,9 @@ function App() {
   }, []);
 
   const attemptLoginWithToken = async () => {
+    const token = window.localStorage.getItem("token");
     if (token) {
+      console.log("TOKEN-1", token);
       const response = await fetch(`/api/auth/me`, {
         headers: {
           authorization: token,
@@ -158,6 +160,7 @@ function App() {
       const json = await response.json();
 
       if (response.ok) {
+        console.log(json.token);
         window.localStorage.setItem("token", json.token);
         attemptLoginWithToken();
       } else {

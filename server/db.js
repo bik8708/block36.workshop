@@ -32,6 +32,7 @@ const createTables = async () => {
 };
 
 const createUser = async ({ username, password }) => {
+  console.log({ username, password });
   if (!username || !password) {
     throw new Error("Username and password are required");
   }

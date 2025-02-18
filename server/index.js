@@ -14,6 +14,8 @@ const {
 } = require("./db");
 const express = require("express");
 const app = express();
+const jwt = require("jsonwebtoken");
+const secret = process.env.JWT || "shhh";
 app.use(express.json());
 
 //for deployment only
@@ -96,12 +98,20 @@ app.get("/api/products", async (req, res, next) => {
 //Adding route to post new users to Register
 app.post("/api/auth/register", async (req, res, next) => {
   try {
-    const newUser = await createUser(req.body.username, req.body.password);
-    res.status(201).send(newUser);
+    console.log(req.body);
+    const newUser = await createUser({
+      username: req.body.username,
+      password: req.body.password,
+    });
+    const token = jwt.sign({ id: newUser.id }, secret);
+
+    res.status(201).send({ token });
   } catch (ex) {
     next(ex);
   }
 });
+
+//send object with key token
 
 app.use((err, req, res, next) => {
   console.log(err);
